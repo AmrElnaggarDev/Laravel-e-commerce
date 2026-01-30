@@ -67,15 +67,17 @@
                                     <td><a href="#" target="_blank">0</a></td>
                                     <td>
                                         <div class="list-icon-function">
-                                            <a href="#">
+                                            <a href="{{route('admin.brand.edit', ['id' => $brand->id])}}">
                                                 <div class="item edit">
                                                     <i class="icon-edit-3"></i>
                                                 </div>
                                             </a>
-                                            <form action="#" method="POST">
-                                                <div class="item text-danger delete">
+                                            <form action="{{route('admin.brand.delete', ['id' => $brand->id])}}" method="POST" id="delete-form-{{$brand->id}}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="item text-danger delete" style="border: none; background: none; cursor: pointer;">
                                                     <i class="icon-trash-2"></i>
-                                                </div>
+                                                </button>
                                             </form>
                                         </div>
                                     </td>
@@ -88,9 +90,32 @@
                     <div class="divider"></div>
                     <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
                         {{$brands->links('pagination::bootstrap-5')}}
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function() {
+            $('.delete').on('click', function(e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
+                swal({
+                    title: "Are you sure?",
+                    text: "You want to delete this record?",
+                    type: "warning",
+                    buttons: ["No", "Yes"],
+                    confirmButtonColor: '#dc3545'
+                }).then(function(result) {
+                    if (result) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
